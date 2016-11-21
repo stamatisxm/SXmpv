@@ -20,6 +20,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# version 0.3.2 Fixed file / directory selection bug
 # version 0.3.0 Added local file and playlist capabilities
 # version 0.2.0 Fixed subtitles
 # version 0.1.0 Initial concept for Remote files
@@ -35,8 +36,8 @@ showVersion() {
 MESSAGECMD="${g}xmessage"
 
 [[ ! -x $(which zenity) ]] && $MESSAGECMD -title "${0##*/}" "This program requires zenity to run" && exit
-[[ ! -x /usr/bin/mpv ]]  && $MESSAGECMD -title "${0##*/}" "This program requires mpv to run" && exit
-[[ ! -x /usr/bin/youtube-dl ]]  && $MESSAGECMD -title "${0##*/}" "This program requires youtube-dl to run" && exit
+[[ ! -x $(which mpv) ]]  && $MESSAGECMD -title "${0##*/}" "This program requires mpv to run" && exit
+[[ ! -x $(which youtube-dl) ]]  && $MESSAGECMD -title "${0##*/}" "This program requires youtube-dl to run" && exit
 
 [[ $(pgrep -au $USER zenity | grep "\-\-name=${0##*/}") ]] && { zenity --window-icon=$MYICON 2>/dev/null --error --text "${0##*/} is already running!" & } && exit
 
@@ -67,6 +68,7 @@ while true; do {
       dirSelectMode='--directory' && \
       videoFilters="*" || \
       { mulSelectMode='--multiple' && \
+        unset dirSelectMode && \
         videoFilters="$VFILTERLIST"; } && \
       myVideo=$(zenity --window-icon=$MYICON --file-selection --title="Select video source" \
       $mulSelectMode $dirSelectMode --file-filter="$videoFilters"); } || true
