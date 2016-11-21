@@ -61,7 +61,7 @@ while true; do {
   [[ $operName =~ "repeat" ]] && myREP="inf" || myREP=1
 
   [[ $operName =~ "Remote" ]] && \
-    myVideo=$(zenity --window-icon=$MYICON --entry --text="Enter URL to attempt to play") || true
+    myVideo=$(zenity --window-icon=$MYICON --entry --width=400 --text="Enter URL to attempt to play") || true
 
   [[ $operName =~ "Local" ]] && \
     { [[ $operName =~ "Directory" ]] && \
