@@ -38,14 +38,18 @@ MESSAGECMD="${g}xmessage"
 [[ ! -x /usr/bin/mpv ]]  && $MESSAGECMD -title "${0##*/}" "This program requires mpv to run" && exit
 [[ ! -x /usr/bin/youtube-dl ]]  && $MESSAGECMD -title "${0##*/}" "This program requires youtube-dl to run" && exit
 
-[[ $(pgrep -au $USER zenity | grep "\-\-name=${0##*/}") ]] && { zenity 2>/dev/null --error --text "${0##*/} is already running!" & } && exit
+[[ $(pgrep -au $USER zenity | grep "\-\-name=${0##*/}") ]] && { zenity --window-icon=$MYICON 2>/dev/null --error --text "${0##*/} is already running!" & } && exit
 
 MYVERSION=$(showVersion)
+
+MYICON=$HOME/.local/share/icons/${0##*/}.png
+
+echo $MYICON
 
 VFILTERLIST='*.avi *.m3u *.m3u8 *.mkv *.mp3 *.mp4 *.ogg *.ogm'
 
 while true; do {
-  operName=$(zenity  2>/dev/null --cancel-label="Quit" --ok-label="Next" \
+  operName=$(zenity --window-icon=$MYICON 2>/dev/null --cancel-label="Quit" --ok-label="Next" \
              --title="${0##*/} $MYVERSION" --name="${0##*/} $MYVERSION" \
              --list --text="Choose Video Location" --radiolist --column="Select" \
              --width=320 --height=240 \
@@ -56,7 +60,7 @@ while true; do {
   [[ $operName =~ "repeat" ]] && myREP="inf" || myREP=1
 
   [[ $operName =~ "Remote" ]] && \
-    myVideo=$(zenity --entry --text="Enter URL to attempt to play") || true
+    myVideo=$(zenity --window-icon=$MYICON --entry --text="Enter URL to attempt to play") || true
 
   [[ $operName =~ "Local" ]] && \
     { [[ $operName =~ "Directory" ]] && \
@@ -64,16 +68,16 @@ while true; do {
       videoFilters="*" || \
       { mulSelectMode='--multiple' && \
         videoFilters="$VFILTERLIST"; } && \
-      myVideo=$(zenity --file-selection --title="Select video source" \
+      myVideo=$(zenity --window-icon=$MYICON --file-selection --title="Select video source" \
       $mulSelectMode $dirSelectMode --file-filter="$videoFilters"); } || true
 
   [[ $? -ne 0 ]] && break || [[ -n $myVideo ]] || continue || true && \
-    mySUB=$(zenity --file-selection --title="Select subtitle file" --file-filter="*.srt")
+    mySUB=$(zenity --window-icon=$MYICON --file-selection --title="Select subtitle file" --file-filter="*.srt")
 
   [[ ! -f "$mySUB" ]] && mySUB="no"
 
   mpv --ytdl "$myVideo" --sub-file="$mySUB" --loop=$myREP || \
-    zenity --error \
+    zenity --window-icon=$MYICON --error \
       --text="Could not perform $(echo $operName | sed 's/\[repeat\]//g') playback \n\non\n\n<span color=\"#FF0000\">$myVideo</span>"
 }; done
 
