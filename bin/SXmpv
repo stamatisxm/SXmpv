@@ -66,11 +66,13 @@ while true; do {
   [[ $operName =~ "Local" ]] && \
     { [[ $operName =~ "Directory" ]] && \
       dirSelectMode='--directory' && \
+      srcMode='directory' && \
       videoFilters="*" || \
       { mulSelectMode='--multiple' && \
         unset dirSelectMode && \
+        srcMode='file(s)' && \
         videoFilters="$VFILTERLIST"; } && \
-      myVideo=$(zenity --window-icon=$MYICON --file-selection --title="Select video source" \
+      myVideo=$(zenity --window-icon=$MYICON --file-selection --title="Select video $srcMode" \
       $mulSelectMode $dirSelectMode --file-filter="$videoFilters"); } || true
 
   [[ $? -ne 0 ]] && break || [[ -n $myVideo ]] || continue || true && \
