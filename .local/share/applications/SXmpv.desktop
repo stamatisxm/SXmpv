@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=SXmpv
+Name[el]=SXmpv
+GenericName=SXmpv
+GenericName[el]=SXmpv
+Comment=General Purpose Player
+Comment[el]=Αναπαραγωγέας Πολυμέσων
+Type=Application
+TryExec=SXmpv
+Exec=SXmpv
+Icon=SXmpv
+Categories=AudioVideo;

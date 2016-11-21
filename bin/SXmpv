@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+#
+#    Copyright (C) 2016  Stamatis X. Mavrogeorgis
+#
+#    Author's Email: stamatis@zirconix.net
+#    Author's Website: http://www.istos.xyz
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# version 0.3.0 Added local file and playlist capabilities
+# version 0.2.0 Fixed subtitles
+# version 0.1.0 Initial concept for Remote files
+
+showVersion() {
+  echo $(grep '^# version' $(which ${0##*/}) | cut -f3 -d\  | sort -u | tail -1)
+}
+
+[[ $1 == '-V' ]] || [[ $1 == '-v' ]] && showVersion && exit
+
+[[ -x $(which gxmessage) ]] && g='g'
+
+MESSAGECMD="${g}xmessage"
+
+[[ ! -x $(which zenity) ]] && $MESSAGECMD -title "${0##*/}" "This program requires zenity to run" && exit
+[[ ! -x /usr/bin/mpv ]]  && $MESSAGECMD -title "${0##*/}" "This program requires mpv to run" && exit
+[[ ! -x /usr/bin/youtube-dl ]]  && $MESSAGECMD -title "${0##*/}" "This program requires youtube-dl to run" && exit
+
+[[ $(pgrep -au $USER zenity | grep "\-\-name=${0##*/}") ]] && { zenity 2>/dev/null --error --text "${0##*/} is already running!" & } && exit
+
+MYVERSION=$(showVersion)
+
+VFILTERLIST='*.avi *.m3u *.m3u8 *.mkv *.mp3 *.mp4 *.ogg *.ogm'
+
+while true; do {
+  operName=$(zenity  2>/dev/null --cancel-label="Quit" --ok-label="Next" \
+             --title="${0##*/} $MYVERSION" --name="${0##*/} $MYVERSION" \
+             --list --text="Choose Video Location" --radiolist --column="Select" \
+             --width=320 --height=240 \
+             --column="Location to play from" TRUE "Remote Location" FALSE "Remote Location [repeat]" \
+               FALSE "Local File(s)" FALSE "Local File(s) [repeat]" \
+               FALSE "Local Directory" FALSE "Local Directory [repeat]") || break
+
+  [[ $operName =~ "repeat" ]] && myREP="inf" || myREP=1
+
+  [[ $operName =~ "Remote" ]] && \
+    myVideo=$(zenity --entry --text="Enter URL to attempt to play") || true
+
+  [[ $operName =~ "Local" ]] && \
+    { [[ $operName =~ "Directory" ]] && \
+      dirSelectMode='--directory' && \
+      videoFilters="*" || \
+      { mulSelectMode='--multiple' && \
+        videoFilters="$VFILTERLIST"; } && \
+      myVideo=$(zenity --file-selection --title="Select video source" \
+      $mulSelectMode $dirSelectMode --file-filter="$videoFilters"); } || true
+
+  [[ $? -ne 0 ]] && break || [[ -n $myVideo ]] || continue || true && \
+    mySUB=$(zenity --file-selection --title="Select subtitle file" --file-filter="*.srt")
+
+  [[ ! -f "$mySUB" ]] && mySUB="no"
+
+  mpv --ytdl "$myVideo" --sub-file="$mySUB" --loop=$myREP || \
+    zenity --error \
+      --text="Could not perform $(echo $operName | sed 's/\[repeat\]//g') playback \n\non\n\n<span color=\"#FF0000\">$myVideo</span>"
+}; done
+
