@@ -35,7 +35,7 @@ Select the `Local File(s)` option with the `[repeat]` if you want repeated video
 
 You can select single or multiple files like shown in the following screenshot
 
-<img alt="SSB01 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSB02.png" />
+<img alt="SSB02 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSB02.png" />
 
 ##### Local Directory (Multi)Selection and Local File (Multi)Selection with infinite repeat option
 
@@ -48,10 +48,10 @@ Select the `Local Directory` option with the `[repeat]` if you want repeated vid
 
 You can select single or multiple directories like shown in the following screenshot
 
-<img alt="SSB01 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSB03.png" />
+<img alt="SSB03 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSB03.png" />
 
 ##### Subtitle Selection dialog
 
 After choosing to play a URL or Local files or directories, you can select subtitles to accompany the playback
 
-<img alt="SSB01 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSC01.png" />
+<img alt="SSC01 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSC01.png" />
