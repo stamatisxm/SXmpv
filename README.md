@@ -15,43 +15,43 @@ Some ancient mpv versions like the mpv 0.8.3 found on Debian Jessie do not seem 
 
 Select the `Remote Location [repeat]` if you want repeated video playback
 
-<img alt="SSA01 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSA01.png" />
-<img alt="SSA02 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSA02.png" />
+![Remote Location](http://ideaware.xyz/images/SXmpv/SXmpv-SSA01.png "Remote Location")
+![Remote Location [repeat]](http://ideaware.xyz/images/SXmpv/SXmpv-SSA02.png "Remote Location [repeat]")
 
 ##### Entry field for URL playback
 
 Insert here the `URL (http://... blah... blah...)` of the video you want to play
 
-<img alt="SSB01 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSB01.png" />
+![URL entry field](http://ideaware.xyz/images/SXmpv/SXmpv-SSB01.png "URL entry field")
 
 ##### Local File (Multi)Selection with option of infinite repeating
 
 Select the `Local File(s)` option with the `[repeat]` if you want repeated video playback
 
-<img alt="SSA03 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSA03.png" />
-<img alt="SSA04 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSA04.png" />
+![Local File(s)](http://ideaware.xyz/images/SXmpv/SXmpv-SSA03.png "Local File(s)")
+![Local File(s) [repeat]](http://ideaware.xyz/images/SXmpv/SXmpv-SSA04.png "Local File(s) [repeat]")
 
 ##### File Multiselection dialog
 
 You can select single or multiple files like shown in the following screenshot
 
-<img alt="SSB02 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSB02.png" />
+![File Selection](http://ideaware.xyz/images/SXmpv/SXmpv-SSB02.png "File Selection")
 
 ##### Local Directory (Multi)Selection and Local File (Multi)Selection with infinite repeat option
 
 Select the `Local Directory` option with the `[repeat]` if you want repeated video playback
 
-<img alt="SSA05 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSA05.png" />
-<img alt="SSA06 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSA06.png" />
+![Local Directory](http://ideaware.xyz/images/SXmpv/SXmpv-SSA05.png "Local Directory")
+![Local Directory [repeat]](http://ideaware.xyz/images/SXmpv/SXmpv-SSA06.png "Local Directory [repeat]")
 
 ##### Directory Multiselection dialog
 
 You can select single or multiple directories like shown in the following screenshot
 
-<img alt="SSB03 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSB03.png" />
+![Directory Selection](http://ideaware.xyz/images/SXmpv/SXmpv-SSB03.png "Directory Selection")
 
 ##### Subtitle Selection dialog
 
 After choosing to play a URL or Local files or directories, you can select subtitles to accompany the playback
 
-<img alt="SSC01 Logo" src="http://ideaware.xyz/images/SXmpv/SXmpv-SSC01.png" />
+![Subtitle Selection](http://ideaware.xyz/images/SXmpv/SXmpv-SSC01.png "Subtitle Selection")
