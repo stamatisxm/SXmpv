@@ -7,6 +7,8 @@ A Zenity front end to mpv
 
 This program requires fairly recent versions of **mpv** and **youtube-dl** (works fine with mpv **0.14.0** and youtube-dl **2016.11.18** but may work with a bit older versions of these programs - *YMMV*)
 
+**Last tested OK on: mpv 0.25.0 and youtube-dl 2017.02.07 on Debian Stretch**
+
 Some ancient mpv versions like the mpv 0.8.3 found on Debian Jessie do not seem to be doing things right, when it comes to playing entire directories with subdirectories within them.
 
 ### Screenshots
