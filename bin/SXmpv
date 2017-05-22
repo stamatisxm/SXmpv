@@ -20,6 +20,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# version 0.3.3 Added file action capability
 # version 0.3.2 Fixed file / directory selection bug
 # version 0.3.0 Added local file and playlist capabilities
 # version 0.2.0 Fixed subtitles
@@ -45,15 +46,17 @@ MYVERSION=$(showVersion)
 
 MYICON=$HOME/.local/share/icons/${0##*/}.png
 
-echo $MYICON
-
 VFILTERLIST='*.avi *.m3u *.m3u8 *.mkv *.mp3 *.mp4 *.ogg *.ogm'
+
+[[ -e $1 ]] && mpv "$1"
+# To exit after file action replace previous line with:
+#[[ -e $1 ]] && mpv "$1" && exit
 
 while true; do {
   operName=$(zenity --window-icon=$MYICON 2>/dev/null --cancel-label="Quit" --ok-label="Next" \
              --title="${0##*/} $MYVERSION" --name="${0##*/} $MYVERSION" \
              --list --text="Choose Video Location" --radiolist --column="Select" \
-             --width=320 --height=240 \
+             --width=320 --height=288 \
              --column="Location to play from" TRUE "Remote Location" FALSE "Remote Location [repeat]" \
                FALSE "Local File(s)" FALSE "Local File(s) [repeat]" \
                FALSE "Local Directory" FALSE "Local Directory [repeat]") || break
@@ -80,7 +83,7 @@ while true; do {
 
   [[ ! -f "$mySUB" ]] && mySUB="no"
 
-  mpv --ytdl "$myVideo" --sub-file="$mySUB" --loop=$myREP || \
+  mpv --ytdl "$myVideo" --sub-file="$mySUB" --loop=$myREP --profile=pseudo-gui || \
     zenity --window-icon=$MYICON --error \
       --text="Could not perform $(echo $operName | sed 's/\[repeat\]//g') playback \n\non\n\n<span color=\"#FF0000\">$myVideo</span>"
 }; done
