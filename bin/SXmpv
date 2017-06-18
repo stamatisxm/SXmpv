@@ -20,6 +20,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# version 0.3.4 Added "fuzzy" subtitle capabilities
 # version 0.3.3 Added file action capability
 # version 0.3.2 Fixed file / directory selection bug
 # version 0.3.0 Added local file and playlist capabilities
@@ -36,11 +37,11 @@ showVersion() {
 
 MESSAGECMD="${g}xmessage"
 
-[[ ! -x $(which zenity) ]] && $MESSAGECMD -title "${0##*/}" "This program requires zenity to run" && exit
-[[ ! -x $(which mpv) ]]  && $MESSAGECMD -title "${0##*/}" "This program requires mpv to run" && exit
-[[ ! -x $(which youtube-dl) ]]  && $MESSAGECMD -title "${0##*/}" "This program requires youtube-dl to run" && exit
+[[ ! -x $(which 2>/dev/null zenity) ]] && $MESSAGECMD -title "${0##*/}" "This program requires zenity to run" && exit
+[[ ! -x $(which 2>/dev/null mpv) ]]  && $MESSAGECMD -title "${0##*/}" "This program requires mpv to run" && exit
+[[ ! -x $(which 2>/dev/null youtube-dl) ]]  && $MESSAGECMD -title "${0##*/}" "This program requires youtube-dl to run" && exit
 
-[[ $(pgrep -au $USER zenity | grep "\-\-name=${0##*/}") ]] && { zenity --window-icon=$MYICON 2>/dev/null --error --text "${0##*/} is already running!" & } && exit
+[[ $(pgrep -au $USER zenity | grep "\-\-name=${0##*/}") ]] && { zenity 2>/dev/null --window-icon=$MYICON --error --text "${0##*/} is already running!" & } && exit
 
 MYVERSION=$(showVersion)
 
@@ -48,43 +49,48 @@ MYICON=$HOME/.local/share/icons/${0##*/}.png
 
 VFILTERLIST='*.avi *.m3u *.m3u8 *.mkv *.mp3 *.mp4 *.ogg *.ogm'
 
-[[ -e $1 ]] && mpv "$1"
-# To exit after file action replace previous line with:
-#[[ -e $1 ]] && mpv "$1" && exit
+[[ -e $1 ]] && myVideo="$1"
 
 while true; do {
-  operName=$(zenity --window-icon=$MYICON 2>/dev/null --cancel-label="Quit" --ok-label="Next" \
-             --title="${0##*/} $MYVERSION" --name="${0##*/} $MYVERSION" \
-             --list --text="Choose Video Location" --radiolist --column="Select" \
-             --width=320 --height=288 \
-             --column="Location to play from" TRUE "Remote Location" FALSE "Remote Location [repeat]" \
-               FALSE "Local File(s)" FALSE "Local File(s) [repeat]" \
-               FALSE "Local Directory" FALSE "Local Directory [repeat]") || break
+  [[ -z $myVideo ]] && \
+  {
+    operName=$(zenity 2>/dev/null --window-icon=$MYICON --cancel-label="Quit" --ok-label="Next" \
+               --title="${0##*/} $MYVERSION" --name="${0##*/} $MYVERSION" \
+               --list --text="Choose Video Location" --radiolist --column="Select" \
+               --width=320 --height=288 \
+               --column="Location to play from" TRUE "Remote Location" FALSE "Remote Location [repeat]" \
+                 FALSE "Local File(s)" FALSE "Local File(s) [repeat]" \
+                 FALSE "Local Directory" FALSE "Local Directory [repeat]") || break;
+  }
 
-  [[ $operName =~ "repeat" ]] && myREP="inf" || myREP=1
+  [[ -z $myVideo ]] && { [[ $operName =~ "repeat" ]] && myREP="inf" || myREP=1; }
 
-  [[ $operName =~ "Remote" ]] && \
-    myVideo=$(zenity --window-icon=$MYICON --entry --width=400 --text="Enter URL to attempt to play") || true
+  [[ -z $myVideo ]] && { [[ $operName =~ "Remote" ]] && \
+    myVideo=$(zenity 2>/dev/null --window-icon=$MYICON --entry --width=400 --text="Enter URL to attempt to play") || true; }
 
-  [[ $operName =~ "Local" ]] && \
-    { [[ $operName =~ "Directory" ]] && \
-      dirSelectMode='--directory' && \
-      srcMode='directory' && \
-      videoFilters="*" || \
-      { mulSelectMode='--multiple' && \
-        unset dirSelectMode && \
-        srcMode='file(s)' && \
-        videoFilters="$VFILTERLIST"; } && \
-      myVideo=$(zenity --window-icon=$MYICON --file-selection --title="Select video $srcMode" \
-      $mulSelectMode $dirSelectMode --file-filter="$videoFilters"); } || true
+  [[ -z $myVideo ]] && \
+  {
+    [[ $operName =~ "Local" ]] && \
+      { [[ $operName =~ "Directory" ]] && \
+        dirSelectMode='--directory' && \
+        srcMode='directory' && \
+        videoFilters="*" || \
+        { mulSelectMode='--multiple' && \
+          unset dirSelectMode && \
+          srcMode='file(s)' && \
+          videoFilters="$VFILTERLIST"; } && \
+        myVideo=$(zenity 2>/dev/null --window-icon=$MYICON --file-selection --separator=' ' --title="Select video $srcMode" \
+        $mulSelectMode $dirSelectMode --file-filter="$videoFilters"); } || true;
+  } || true
 
   [[ $? -ne 0 ]] && break || [[ -n $myVideo ]] || continue || true && \
-    mySUB=$(zenity --window-icon=$MYICON --file-selection --title="Select subtitle file" --file-filter="*.srt")
+    mySUB=$(zenity 2>/dev/null --window-icon=$MYICON --file-selection --title="Select external subtitle file" --file-filter="*.srt")
 
-  [[ ! -f "$mySUB" ]] && mySUB="no"
+  [[ ! -f "$mySUB" ]] && mySUBConf="--sub-auto=fuzzy" || mySUBConf="--sub-file=$mySUB"
 
-  mpv --ytdl "$myVideo" --sub-file="$mySUB" --loop=$myREP --profile=pseudo-gui || \
-    zenity --window-icon=$MYICON --error \
+  mpv --ytdl "$myVideo" "$mySUBConf" --loop-playlist=$myREP --profile=pseudo-gui || \
+    zenity 2>/dev/null --window-icon=$MYICON --error \
       --text="Could not perform $(echo $operName | sed 's/\[repeat\]//g') playback \n\non\n\n<span color=\"#FF0000\">$myVideo</span>"
+  unset myVideo
 }; done
 
