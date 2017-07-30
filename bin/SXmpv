@@ -20,12 +20,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# version 0.3.4 Added "fuzzy" subtitle capabilities
-# version 0.3.3 Added file action capability
-# version 0.3.2 Fixed file / directory selection bug
-# version 0.3.0 Added local file and playlist capabilities
-# version 0.2.0 Fixed subtitles
-# version 0.1.0 Initial concept for Remote files
+# version 0.3.5 - Fixed aesthetical versioning issue
+# version 0.3.4 - Added "fuzzy" subtitle capabilities
+# version 0.3.3 - Added file action capability
+# version 0.3.2 - Fixed file / directory selection bug
+# version 0.3.0 - Added local file and playlist capabilities
+# version 0.2.0 - Fixed subtitles
+# version 0.1.0 - Initial concept for Remote files
 
 showVersion() {
   echo $(grep '^# version' $(which ${0##*/}) | cut -f3 -d\  | sort -u | tail -1)
